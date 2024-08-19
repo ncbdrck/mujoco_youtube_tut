@@ -3,10 +3,10 @@ from mujoco.glfw import glfw
 import numpy as np
 import os
 
-xml_path = 'hello.xml' #xml file (assumes this is in the same folder as this file)
-simend = 5 #simulation time
-print_camera_config = 0 #set to 1 to print camera config
-                        #this is useful for initializing view of the model)
+xml_path = 'hello.xml'  # xml file (assumes this is in the same folder as this file)
+simend = 5  # simulation time
+print_camera_config = 0  # set to 1 to print camera config
+# this is useful for initializing view of the model
 
 # For callback functions
 button_left = False
@@ -15,18 +15,22 @@ button_right = False
 lastx = 0
 lasty = 0
 
-def init_controller(model,data):
-    #initialize the controller here. This function is called once, in the beginning
+
+def init_controller(model, data):
+    # initialize the controller here. This function is called once, in the beginning
     pass
 
+
 def controller(model, data):
-    #put the controller here. This function is called inside the simulation.
+    # put the controller here. This function is called inside the simulation.
     pass
+
 
 def keyboard(window, key, scancode, act, mods):
     if act == glfw.PRESS and key == glfw.KEY_BACKSPACE:
         mj.mj_resetData(model, data)
         mj.mj_forward(model, data)
+
 
 def mouse_button(window, button, act, mods):
     # update button state
@@ -43,6 +47,7 @@ def mouse_button(window, button, act, mods):
 
     # update mouse position
     glfw.get_cursor_pos(window)
+
 
 def mouse_move(window, xpos, ypos):
     # compute mouse displacement, save
@@ -85,13 +90,15 @@ def mouse_move(window, xpos, ypos):
     else:
         action = mj.mjtMouse.mjMOUSE_ZOOM
 
-    mj.mjv_moveCamera(model, action, dx/height,
-                      dy/height, scene, cam)
+    mj.mjv_moveCamera(model, action, dx / height,
+                      dy / height, scene, cam)
+
 
 def scroll(window, xoffset, yoffset):
     action = mj.mjtMouse.mjMOUSE_ZOOM
     mj.mjv_moveCamera(model, action, 0.0, -0.05 *
                       yoffset, scene, cam)
+
 
 #get the full path
 dirname = os.path.dirname(__file__)
@@ -100,9 +107,9 @@ xml_path = abspath
 
 # MuJoCo data structures
 model = mj.MjModel.from_xml_path(xml_path)  # MuJoCo model
-data = mj.MjData(model)                # MuJoCo data
-cam = mj.MjvCamera()                        # Abstract camera
-opt = mj.MjvOption()                        # visualization options
+data = mj.MjData(model)  # MuJoCo data
+cam = mj.MjvCamera()  # Abstract camera
+opt = mj.MjvOption()  # visualization options
 
 # Init GLFW, create window, make OpenGL context current, request v-sync
 glfw.init()
@@ -129,7 +136,7 @@ glfw.set_scroll_callback(window, scroll)
 # cam.lookat = np.array([0.0, 0.0, 0])
 
 #initialize the controller
-init_controller(model,data)
+init_controller(model, data)
 
 #set the controller
 mj.set_mjcb_control(controller)
@@ -137,10 +144,10 @@ mj.set_mjcb_control(controller)
 while not glfw.window_should_close(window):
     time_prev = data.time
 
-    while (data.time - time_prev < 1.0/60.0):
+    while (data.time - time_prev < 1.0 / 60.0):
         mj.mj_step(model, data)
 
-    if (data.time>=simend):
+    if (data.time >= simend):
         break;
 
     # get framebuffer viewport
@@ -148,10 +155,10 @@ while not glfw.window_should_close(window):
         window)
     viewport = mj.MjrRect(0, 0, viewport_width, viewport_height)
 
-    #print camera configuration (help to initialize the view)
-    if (print_camera_config==1):
-        print('cam.azimuth =',cam.azimuth,';','cam.elevation =',cam.elevation,';','cam.distance = ',cam.distance)
-        print('cam.lookat =np.array([',cam.lookat[0],',',cam.lookat[1],',',cam.lookat[2],'])')
+    # print camera configuration (help to initialize the view)
+    if (print_camera_config == 1):
+        print('cam.azimuth =', cam.azimuth, ';', 'cam.elevation =', cam.elevation, ';', 'cam.distance = ', cam.distance)
+        print('cam.lookat =np.array([', cam.lookat[0], ',', cam.lookat[1], ',', cam.lookat[2], '])')
 
     # Update scene and render
     mj.mjv_updateScene(model, data, opt, None, cam,
