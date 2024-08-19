@@ -100,7 +100,7 @@ def scroll(window, xoffset, yoffset):
                       yoffset, scene, cam)
 
 
-#get the full path
+# get the full path
 dirname = os.path.dirname(__file__)
 abspath = os.path.join(dirname + "/" + xml_path)
 xml_path = abspath
@@ -135,10 +135,10 @@ glfw.set_scroll_callback(window, scroll)
 # cam.distance = 2
 # cam.lookat = np.array([0.0, 0.0, 0])
 
-#initialize the controller
+# initialize the controller
 init_controller(model, data)
 
-#set the controller
+# set the controller
 mj.set_mjcb_control(controller)
 
 while not glfw.window_should_close(window):
@@ -156,7 +156,7 @@ while not glfw.window_should_close(window):
     viewport = mj.MjrRect(0, 0, viewport_width, viewport_height)
 
     # print camera configuration (help to initialize the view)
-    if (print_camera_config == 1):
+    if print_camera_config == 1:
         print('cam.azimuth =', cam.azimuth, ';', 'cam.elevation =', cam.elevation, ';', 'cam.distance = ', cam.distance)
         print('cam.lookat =np.array([', cam.lookat[0], ',', cam.lookat[1], ',', cam.lookat[2], '])')
 
