@@ -160,13 +160,25 @@ time = 0
 dt = 0.001
 
 while not glfw.window_should_close(window):
-    time_prev = data.time
+    # time_prev = data.time
+    time_prev = time
 
-    while (data.time - time_prev < 1.0 / 60.0):
-        mj.mj_step(model, data)
+    while time - time_prev < 1.0 / 60.0:
+        # set the desired joint angles
+        data.qpos[0] = q0[i]
+        data.qpos[1] = q1[i]
+        mj.mj_forward(model, data)
+        time += dt
+    i += 1
 
-    if (data.time >= simend):
-        break;
+    # print the ee position
+    print(data.site_xpos[0])
+
+    if i >= N:
+        break
+
+    if data.time >= simend:
+        break
 
     # get framebuffer viewport
     viewport_width, viewport_height = glfw.get_framebuffer_size(

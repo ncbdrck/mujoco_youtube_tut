@@ -4,12 +4,36 @@
 	<!-- better to have this during the modeling phase	-->
 	<option gravity="0 0 0"/>
 	<worldbody>
+		<!-- Light source -->
         <light diffuse=".5 .5 .5" pos="0 0 10" dir="0 0 -1"/>
+
+		<!-- Ground plane -->
 		<geom type="plane" size="2 2 0.1" rgba="1 1 1 1"/>
-		<body pos="0 0 1" name="link_1" euler="0 90 0">
-			<joint type="free"/>
+
+		<!-- Base of the manipulator -->
+		<!-- Link 1 -->
+		<body pos="0.5 0 0.1" name="link_1" euler="0 90 0">
+			<!-- Joint type can be free, hinge, slide, ball, or free -->
+			<!-- revolute joint are hinge -->
+			<joint type="hinge" axis="-1 0 0" pos="0 0 -0.5"/>
 			<!-- Cylinder have 2 parameters: radius and height -->
 			<geom type="cylinder" size="0.05 0.5" rgba="1 0 0 1"/>
+
+			<!-- Link 2: It is a child of link 1 -->
+			<body pos="0 0 1" name="link_2" euler="0 0 0">
+				<!-- We need to define thing with respect to the parent body (above)-->
+				<joint type="hinge" axis="-1 0 0" pos="0 0 -0.5"/>
+				<!-- Cylinder have 2 parameters: radius and height -->
+				<geom type="cylinder" size="0.05 0.5" rgba="0 1 0 1"/>
+
+				<!-- Adda tip to the manipulator -->
+				<site name="tip" pos="0 0 0.5" size="0.05"/>
+			</body>
 		</body>
 	</worldbody>
+
+	<!-- Add a sensor to the tip of the manipulator -->
+	<sensor>
+		<framepos objtype="site" objname="tip"/>
+	</sensor>
 </mujoco>
