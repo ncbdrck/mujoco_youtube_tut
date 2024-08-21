@@ -1,0 +1,15 @@
+<!--This is the 2D planner tut from YouTube-->
+
+<mujoco>
+	<!-- better to have this during the modeling phase	-->
+	<option gravity="0 0 0"/>
+	<worldbody>
+        <light diffuse=".5 .5 .5" pos="0 0 10" dir="0 0 -1"/>
+		<geom type="plane" size="2 2 0.1" rgba="1 1 1 1"/>
+		<body pos="0 0 1" name="link_1" euler="0 90 0">
+			<joint type="free"/>
+			<!-- Cylinder have 2 parameters: radius and height -->
+			<geom type="cylinder" size="0.05 0.5" rgba="1 0 0 1"/>
+		</body>
+	</worldbody>
+</mujoco>
