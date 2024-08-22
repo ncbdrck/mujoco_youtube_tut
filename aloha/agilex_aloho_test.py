@@ -74,18 +74,16 @@ def set_joint_positions_right_arm(model, data, target_positions):
             data.ctrl[actuator_id] = target_positions[i]
 
 
-def visualize_camera(model, data, camera_name='f_dabai'):
+def visualize_camera(model, data, camera_name, viewport_x, viewport_y, viewport_width=320, viewport_height=240):
     """
     Render the camera view specified by `camera_name`.
     :param model: The MuJoCo model.
     :param data: The MuJoCo data.
     :param camera_name: The name of the camera to visualize.
-
-    We have the following cameras in the model:
-    - f_dabai
-    - fl_dabai
-    - fr_dabai
-
+    :param viewport_x: The x-coordinate of the viewport's position in the window.
+    :param viewport_y: The y-coordinate of the viewport's position in the window.
+    :param viewport_width: The width of the viewport.
+    :param viewport_height: The height of the viewport.
     """
     # Create a new camera object for rendering
     cam = mj.MjvCamera()
@@ -97,15 +95,15 @@ def visualize_camera(model, data, camera_name='f_dabai'):
     cam.fixedcamid = camera_id
     cam.type = mj.mjtCamera.mjCAMERA_FIXED
 
-    # Create a new viewport for the camera view
-    viewport_width, viewport_height = 320, 240
-    viewport = mj.MjrRect(0, 0, viewport_width, viewport_height)
+    # Create a new viewport for the camera view, placed at (viewport_x, viewport_y)
+    viewport = mj.MjrRect(viewport_x, viewport_y, viewport_width, viewport_height)
 
     # Update the scene for the camera view
     mj.mjv_updateScene(model, data, opt, None, cam, mj.mjtCatBit.mjCAT_ALL.value, scene)
 
     # Render the scene from the camera's perspective
     mj.mjr_render(viewport, scene, context)
+
 
 # similar to ros's joint_states topic
 def get_joint_states(model, data, joint_names):
@@ -320,10 +318,26 @@ while not glfw.window_should_close(window):
     mj.mjv_updateScene(model, data, opt, None, cam, mj.mjtCatBit.mjCAT_ALL.value, scene)
     mj.mjr_render(viewport, scene, context)
 
-    # Visualize camera view
-    visualize_camera(model, data, camera_name='f_dabai')
-    visualize_camera(model, data, camera_name='fl_dabai')
-    visualize_camera(model, data, camera_name='fr_dabai')
+    # Get framebuffer dimensions
+    viewport_width, viewport_height = glfw.get_framebuffer_size(window)
+
+    # Calculate the position and size for each camera viewport
+    cam_viewport_width = viewport_width // 3  # Divide the window width by 3 for 3 cameras
+    cam_viewport_height = viewport_height // 3  # Adjust as needed for your window size
+
+    # Visualize the first camera (f_dabai) on the left
+    visualize_camera(model, data, 'f_dabai', 0, 0, cam_viewport_width, cam_viewport_height)
+
+    # Visualize the second camera (fl_dabai) in the center
+    visualize_camera(model, data, 'fl_dabai', cam_viewport_width, 0, cam_viewport_width, cam_viewport_height)
+
+    # Visualize the third camera (fr_dabai) on the right
+    visualize_camera(model, data, 'fr_dabai', 2 * cam_viewport_width, 0, cam_viewport_width, cam_viewport_height)
+
+    # # Render the main scene in the full window (or wherever you prefer)
+    # viewport = mj.MjrRect(0, 0, viewport_width, viewport_height)
+    # mj.mjv_updateScene(model, data, opt, None, cam, mj.mjtCatBit.mjCAT_ALL.value, scene)
+    # mj.mjr_render(viewport, scene, context)
 
     # swap OpenGL buffers (blocking call due to v-sync)
     glfw.swap_buffers(window)
