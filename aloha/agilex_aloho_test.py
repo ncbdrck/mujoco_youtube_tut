@@ -173,8 +173,10 @@ def test_all_functions(model, data):
     test_joint_states(model, data)
 
     # Send commands to move the robot
-    target_positions = [0.0, 0.5, 0.1, -0.2, 0.3, 2.0, 1.01, 0.01]
+    target_positions = [0.0, 0.5, 0.1, -0.2, -2.3, -2.0, 1.01, 0.01]
     set_joint_positions_left_arm(model, data, target_positions)
+    target_positions_r = [0.0, -2.5, 0.1, -0.2, 1.3, 2.0, 1.01, 1.01]
+    set_joint_positions_right_arm(model, data, target_positions_r)
     test_joint_states(model, data)
 
 def init_controller(model, data):
@@ -288,6 +290,8 @@ glfw.set_scroll_callback(window, scroll)
 # cam.elevation = -45
 # cam.distance = 2
 # cam.lookat = np.array([0.0, 0.0, 0])
+cam.azimuth = 130.0 ; cam.elevation = -40 ; cam.distance =  3.5
+cam.lookat =np.array([ 0.0 , 0.0 , 0.0 ])
 
 # initialize the controller
 init_controller(model, data)
