@@ -1,0 +1,23 @@
+<mujoco>
+	<!-- Easy to model when the gravity is zero -->
+	<option gravity="0 0 0"/>
+	<worldbody>
+        <light diffuse=".5 .5 .5" pos="0 0 3" dir="0 0 -1"/>
+		<geom type="plane" size="1 1 0.1" rgba="1 1 1 1"/>
+
+		<!-- We can use simulate.exe, drag the model and set the rendering frame to "body" -->
+		<!-- Using that, we can determine how to rotate the body to make it look like a car -->
+		<body name="chassis" pos="0 0 .2" euler="0 90 0">
+			<joint type="free"/>
+			<!-- we can set the x to be 10cm, y to be 40cm and z to be 1m -->
+			<geom type="box" size=".05 .2 .5" rgba="1 1 0 1"/>
+
+			<!-- We can add a wheel -->
+			<body name="left_wheel" pos="0 0.25 -0.2" euler="90 0 0">
+			<joint type="hinge"/>
+			<!-- cylinder only have length and radius -->
+			<geom type="cylinder" size=".2 .05" rgba="0 1 0 1"/>
+		</body>
+		</body>
+	</worldbody>
+</mujoco>
